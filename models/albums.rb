@@ -28,7 +28,7 @@ class Album
 
   def self.all()
     sql = "SELECT * FROM albums;"
-    SqlRunner.new(sql)
+    albums = SqlRunner.run(sql)
     return albums.map{|album| Album.new(album)}
   end
 
@@ -44,11 +44,18 @@ class Album
     SqlRunner.run(sql, values)
   end
 
-  def artist
+  def artist()
     sql ="SELECT * FROM artists WHERE id = $1"
     values =[@artist_id]
-    customer = SqlRunner.run(sql, values)[0]  #extracts first hash form array of hashes
-    return Artist.new(customer)
+    artist = SqlRunner.run(sql, values)[0] #extracts first hash from array of hashes
+    return Artist.new(artist)
+  end
+
+  def self.by_id(id)
+    sql ="SELECT * FROM albums WHERE id = $1"
+    values =[id]
+    album = SqlRunner.run(sql, values) #extracts first hash from array of hashes
+    return Album.new(album)
   end
 
   def self.delete_by_artist_id(id)
